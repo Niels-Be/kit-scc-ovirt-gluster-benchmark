@@ -1,0 +1,3 @@
+server.allow-insecure on
+storage.owner-gid 36
+storage.owner-uid 36

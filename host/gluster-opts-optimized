@@ -1,0 +1,21 @@
+network.ping-timeout 30
+server.allow-insecure on
+storage.owner-gid 36
+storage.owner-uid 36
+user.cifs off
+features.shard on
+cluster.shd-wait-qlength 10000
+cluster.shd-max-threads 8
+cluster.locking-scheme granular
+cluster.data-self-heal-algorithm full
+cluster.server-quorum-type server
+cluster.quorum-type auto
+cluster.eager-lock enable
+network.remote-dio enable
+performance.low-prio-threads 32
+performance.io-cache off
+performance.read-ahead off
+performance.quick-read off
+transport.address-family inet
+nfs.disable on
+
