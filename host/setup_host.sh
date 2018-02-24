@@ -45,3 +45,6 @@ done
 
 # now install ovirt host engine via ovirt ui
 # and setup gluster
+
+# backend config of gluster (only run this on one host)
+# gdeploy -c gluster.conf 
