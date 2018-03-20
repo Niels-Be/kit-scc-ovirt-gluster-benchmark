@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+
+    <title>Benchmarks</title>
+    <style>
+        canvas {
+            display: inline !important;
+        }
+    </style>
+    <script src="chart.js"></script>
+    <script>
+        window.onload = function () {
+            plotCharts("host_results_small.json");
+        };
+    </script>
+</head>
+
+<body>
+    <h3>Host: Blocksize 1M, Direct=1</h3>
+    <canvas id="seqChartBW" width="600" height="600"></canvas>
+    <canvas id="randChartBW" width="600" height="600"></canvas>
+    <canvas id="paraChartBW" width="600" height="600"></canvas>
+    <br>
+    <canvas id="seqChartIOPS" width="600" height="600"></canvas>
+    <canvas id="randChartIOPS" width="600" height="600"></canvas>
+    <canvas id="paraChartIOPS" width="600" height="600"></canvas>
+    <br>
+    <canvas id="seqChartLat" width="600" height="600"></canvas>
+    <canvas id="randChartLat" width="600" height="600"></canvas>
+    <canvas id="paraChartLat" width="600" height="600"></canvas>
+
+</body>
+
+</html>

@@ -52,3 +52,5 @@ gluster volume start rhv-iso
 
 # restore backup
 
+# note before running any benchmarks wait for RAID synchronization to compleate
+# check: cat /proc/mdstat

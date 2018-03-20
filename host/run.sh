@@ -33,26 +33,17 @@ function echoBricks {
   echo
 }
 
-
 function run {
   name=$1
-  
-  if ! gluster volume start $name ; then 
-    echo "Volume $name could not be started"
-    return 1
-  fi
-  if ! mount -t glusterfs localhost:/$name $MOUNT_DIR ; then 
-    echo "Volume $name could not be mounted"
-    return 1
-  fi
-  
+  dir=$2
+
   for jobfile in $JOB_DIR/*.job ; do
     job=$(basename -s .job $jobfile)
     echo "Running $job on $name"
 
     # setup env
     export JOB=$job
-    export DIR=$MOUNT_DIR/fio-tests/$job
+    export DIR=$dir/fio-tests/$job
     export VOL=$name
     export RUNTIME=$RUNTIME
     
@@ -67,9 +58,24 @@ function run {
     sync
     sleep 1
   done
+}
+
+function runGluster {
+  name=$1
   
+  #if ! gluster volume start $name ; then 
+  #  echo "Volume $name could not be started"
+  #  return 1
+  #fi
+  if ! mount -t glusterfs localhost:/$name $MOUNT_DIR ; then 
+    echo "Volume $name could not be mounted"
+    return 1
+  fi
+ 
+  run $name $MOUNT_DIR
+   
   umount $MOUNT_DIR
-  yes | gluster volume stop $name
+  #yes | gluster volume stop $name
   if [ "$DELETE_VOLUMES" == "1" ]; then
     yes | gluster volume delete $name
   fi
@@ -88,20 +94,29 @@ function createVolume {
   return gluster volume create $name $@ force && \
          cat $optionsFile | xargs -L1 gluster volume set $name
 }
-  
+ 
+
+
+run test_gpfs_raid5 /gpfs
+ 
+exit
+
+
+runGluster test_raid5
+runGluster test_raid5_opt
 
 
 for i in {1,2,3,4} ; do
   createVolume test_disperse_$i $SCIPRT_DIR/gluster-opts-all disperse-data 4 redundancy 2 $(echoBricks $i bd$i) && \
-  run test_disperse_$i || true
+  runGluster test_disperse_$i || true
  
   createVolume test_replica_$i $SCIPRT_DIR/gluster-opts-all replica 3 $(echoBricks $i br$i) && \
-  run test_replica_$i || true
+  runGluster test_replica_$i || true
   
   createVolume test_replica_opt_$i $SCIPRT_DIR/gluster-opts-optimized replica 3 $(echoBricks $i bo$i) && \
-  run test_replica_opt_$i || true
+  runGluster test_replica_opt_$i || true
   
   createVolume test_disperse_opt_$i $SCIPRT_DIR/gluster-opts-optimized disperse-data 4 redundancy 2 $(echoBricks $i bdo$i) && \
-  run test_disperse_opt_$i || true
+  runGluster test_disperse_opt_$i || true
 done
 
